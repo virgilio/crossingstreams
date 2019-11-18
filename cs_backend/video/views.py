@@ -10,5 +10,3 @@ class VideoViewSet(viewsets.ModelViewSet):
     serializer_class = VideoSerializer
     queryset = Video.objects.all()
     filter_fields = ('yt_video_id', 'user__email', )
-
-

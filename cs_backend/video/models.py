@@ -12,9 +12,11 @@ class Video(models.Model):
     video_extra_data = fields.JSONField(_('Extra Data'), blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='videos',
                              on_delete=models.CASCADE)
+    duration = models.IntegerField(_('Video Duration'), default=0)
+    title = models.CharField(_('Video Title'), blank=True, null=True, max_length=255)
 
     def __str__(self):
-        return self.yt_video_id
+        return '{}: {}'.format(self.yt_video_id, self.title)
 
 class QuestionType(models.Model):
     type_name = models.CharField(_('Type name'), max_length=20)
@@ -33,7 +35,7 @@ class Question(models.Model):
                               on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.question_text[:150]
+        return '{}: {}'.format(self.video.title, self.question_text[:50])
 
 class Option(models.Model):
     option_text = models.CharField(_('Option'), max_length=255, blank=True)
