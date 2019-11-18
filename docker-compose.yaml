@@ -1,0 +1,62 @@
+version: '3.5'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+networks:
+  crossingstreams:
+    name: crossingstreams
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    image: cs_backend
+    depends_on:
+      - postgres
+    volumes:
+      - ./cs_backend:/app
+    env_file:
+      - ./.envs/.django
+      - ./.envs/.postgres
+    ports:
+      - "8000:8000"
+    networks:
+      - crossingstreams
+    command: /start
+
+  postgres:
+    image: postgres:11.3
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    networks:
+      - crossingstreams
+    env_file:
+      - ./.envs/.postgres
+
+  react:
+    build:
+      context: .
+      dockerfile: ./compose/react/Dockerfile
+    image: cs_frontend
+    volumes:
+      - ./cs_frontend/:/app
+    env_file:
+      - ./.envs/.react
+    ports:
+      - '3000:3000'
+    networks:
+      - crossingstreams
+    command: /start
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./compose/nginx/Dockerfile
+    ports:
+      - '80:80'
+    networks:
+      - crossingstreams

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+npm install --silent
+npm install react-scripts@3.0.1 -g --silent
+
+npm start
