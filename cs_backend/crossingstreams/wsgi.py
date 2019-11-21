@@ -1,5 +1,5 @@
 """
-WSGI config for crossingstreams project.
+WSGI config for cs_backend project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

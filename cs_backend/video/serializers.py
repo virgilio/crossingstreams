@@ -1,21 +1,25 @@
 from rest_framework import serializers
 
-from .models import Video, Question, Answer, Option
+from .models import Video, Activity, Answer, Option
 
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
         fields = '__all__'
 
-class QuestionSerializer(serializers.ModelSerializer):
+class ActivitySerializer(serializers.ModelSerializer):
     options = OptionSerializer(read_only=True, many=True)
 
     class Meta:
-        model = Question
+        model = Activity
         fields = '__all__'
 
 class VideoSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(read_only=True, many=True)
+    activities = ActivitySerializer(read_only=True, many=True)
 
     class Meta:
         model = Video

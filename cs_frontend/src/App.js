@@ -1,39 +1,31 @@
 import React from 'react';
-
-import VideoEditView from './views/Video/VideoEditView';
-import VideoListView from './views/Video/VideoListView';
-import VideoView from './views/Video/VideoView';
-import SignIn from './views/Auth/SignIn'
-import SignUp from './views/Auth/SignUp'
-
+import axios from 'axios';
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
+    BrowserRouter as Router,
+    Switch,
+    Route,
 } from "react-router-dom";
 
+import {VideoCreate, VideoEdit, VideoEmbed, VideoStats} from './views/video/index'
+
 const App = () => {
-  return (
-    <Router>
-      <div>
-        <Switch>
-          <Route path="/login">
-            <SignIn />
-          </Route>
-          <Route path="/join">
-            <SignUp />
-          </Route>
-          <Route path="/video/edit">
-            <VideoEditView />
-          </Route>
-          <Route path="/video/:video" component={VideoView} />
-          <Route path="/">
-            <VideoListView />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  );
+
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios.defaults.xsrfCookieName = "csrftoken";
+    return (
+        <Router>
+            <div>
+                <Switch>
+                    <Route path="/video/edit/:video" component={VideoEdit} />
+                    <Route path="/video/stats/:video" component={VideoStats} />
+                    <Route path="/video/embed/:video" component={VideoEmbed} />
+                    <Route path="/">
+                        <VideoCreate />
+                    </Route>
+                </Switch>
+            </div>
+        </Router>
+    );
 }
 
 export default App;
