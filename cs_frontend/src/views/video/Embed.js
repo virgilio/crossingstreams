@@ -6,6 +6,7 @@ import CyoaPlayer from '../../cyoa/CyoaPlayer';
 import Container from '../components/Container';
 
 import Question from '../../cyoa/activities/Question';
+import GetEmail from '../../cyoa/activities/GetEmail';
 
 const VideoEmbed = (props) => {
     const [video, setVideo] = React.useState({
@@ -24,7 +25,7 @@ const VideoEmbed = (props) => {
     const activityHandler = (activity) => {
         setActivity({
             show: true,
-            type: 'question',
+            type: activity.activity_type,
             activity: activity
         });
     }
@@ -32,11 +33,19 @@ const VideoEmbed = (props) => {
     const saveQuestionAnswer = (option) => {
         axios
             .post('/api/answer/', {
-                activity: option.activity.id,
+                activity: option.activity,
                 answer: option.id
             })
             .then(res => console.log('Answer Saved'))
             .catch(err => console.log(err))
+    }
+
+    const saveEmail = (viewer_email, activity_id) => {
+        axios
+            .post('/api/answer/', {
+                viewer_email: viewer_email,
+                activity: activity_id
+            })
     }
 
     const handleActivityClose = (data) => {
@@ -47,6 +56,14 @@ const VideoEmbed = (props) => {
                 saveQuestionAnswer(option);
                 switch (option.action) {
                     case 'change_video':
+                        cyoa.setVideo(undefined);
+                        setVideo({
+                            ...video,
+                            data: {
+                                yt_video_id: option.jump_to_video,
+                                activities: []
+                            }
+                        })
                         cyoa.reloadPlayerWith(option.jump_to_video);
                         break;
                     case 'jump_to':
@@ -58,6 +75,11 @@ const VideoEmbed = (props) => {
             } else {
                 cyoa.resumePlayer();
             }
+        } else if (activity.type === 'email') {
+            if (data) {
+                saveEmail(data, activity.activity.id);
+            }
+            cyoa.resumePlayer();
         }
         setActivity({
             show: false,
@@ -101,6 +123,10 @@ const VideoEmbed = (props) => {
                 <Question handleClose={handleActivityClose}
                     activity={activity.activity}
                     show={activity.show && activity.type === 'question'} />
+                <GetEmail handleClose={handleActivityClose}
+                    activity={activity.activity}
+                    show={activity.show && activity.type === 'email'}
+                ></GetEmail>
             </div>
         );
     } else {

@@ -1,10 +1,9 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 
-const Question = (props) => {
+const GetEmail = (props) => {
     const [email, setEmail] = React.useState(undefined);
     if (!props.activity) {
         return (<></>);
@@ -17,7 +16,9 @@ const Question = (props) => {
                     </Modal.Header>
                     <Modal.Body>
                         <Form>
-                            <Form.Group controlId="formBasicEmail">
+                            <Form.Group
+                                onChange={(e) => setEmail(e.target.value)}
+                                controlId="formBasicEmail">
                                 <Form.Label>Email address</Form.Label>
                                 <Form.Control type="email" placeholder="Enter email" />
                                 <Form.Text className="text-muted">
@@ -30,7 +31,7 @@ const Question = (props) => {
                         <Button variant="secondary" onClick={() => props.handleClose()}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={() => props.handleClose(selected)}>
+                        <Button variant="primary" onClick={() => props.handleClose(email)}>
                             Send
                         </Button>
                     </Modal.Footer>
@@ -40,4 +41,4 @@ const Question = (props) => {
     }
 }
 
-export default Question;
+export default GetEmail;

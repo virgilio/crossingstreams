@@ -4,7 +4,9 @@ class CyoaPlayer {
     }
 
     _setNextActivity = () => {
-        if (this.video.activities.length === 0) {
+        if (!this.video) {
+            this.activity = undefined;
+        } else if (this.video.activities.length === 0) {
             this.activity = undefined;
         } else {
             this.activity = this.video.activities
@@ -50,7 +52,9 @@ class CyoaPlayer {
 
     pausePlayer = () => {
         this.player.pauseVideo();
-        this.activityHandler(this.activity);
+        if(this.activity){
+            this.activityHandler(this.activity);
+        }
     }
 
     reloadPlayerWith = (video_id) => {
